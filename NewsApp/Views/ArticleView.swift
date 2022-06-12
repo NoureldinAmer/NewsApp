@@ -29,18 +29,21 @@ struct ArticleView: View {
     
     var articleHeader: some View {
         Text(article.title)
-            .font(.headline)
+            .font(.title2)
             .padding(.trailing, 2.9)
 
     }
     
     var articleImage: some View {
         AsyncImage(url: article.imageURL) { image in
-            image.resizable()
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
         } placeholder: {
             ProgressView()
         }
         .frame(width: 100, height: 100)
+        .clipped()
     }
     
     var articleSource: some View {
@@ -61,13 +64,21 @@ struct ArticleView: View {
 
 struct ArticleView_Previews: PreviewProvider {
     static var previews: some View {
+        NavigationView {
         List {
-            ArticleView(article: Article.previewData[0])
-                .listRowInsets(.init(top: 3, leading: 0,bottom: 0, trailing: 0))
+            NavigationLink {
+                ArticleWebView(url: Article.previewData[0].articleURL)
+            } label: {
+                ArticleView(article: Article.previewData[0])
+                    .listRowInsets(.init(top: 3, leading: 0,bottom: 0, trailing: 0))
+                
+            }
+            
         }
         .listStyle(.plain)
         
         
+        }
     }
 }
 

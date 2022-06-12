@@ -14,18 +14,19 @@ struct ArticleListView: View {
         NavigationView {
             List {
                 ForEach(articles) {article in
-                    ArticleView(article: article)
-                        .listRowInsets(.init(top: 0, leading: 0,bottom: 0, trailing: 0))
+                    NavigationLink{
+                        ArticleWebView(url: article.articleURL)
+                    }label: {
+                        ArticleView(article: article)
+                            .listRowInsets(.init(top: 0, leading: 0,bottom: 0, trailing: 0))
+                    }
                 }
                 .onDelete(perform: delete)
                 
             }
             .listStyle(.plain)
             .navigationTitle("News")
-            
         }
-        
-        
     }
     
     func delete(at offsets: IndexSet) {
@@ -40,4 +41,3 @@ struct ContentView_Previews: PreviewProvider {
             .preferredColorScheme(.light)
     }
 }
-
