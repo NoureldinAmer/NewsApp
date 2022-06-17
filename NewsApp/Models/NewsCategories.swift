@@ -1,6 +1,6 @@
 import Foundation
 
-enum Category: String, CaseIterable {
+enum Category: String, CaseIterable, Identifiable {
     case general
     case business
     case technology
@@ -15,8 +15,7 @@ enum Category: String, CaseIterable {
         }
         return rawValue.capitalized
     }
-}
-
-extension Category: Identifiable {
+    
     var id: Self { self }
 }
+

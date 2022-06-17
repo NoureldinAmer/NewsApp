@@ -2,6 +2,7 @@ import Foundation
 
 struct NewsAPI {
     
+    //init() is set to avoid creating instances 
     static let shared = NewsAPI()
     private init() {}
     
@@ -13,7 +14,7 @@ struct NewsAPI {
         return decoder
     }()
     
-    func fetch(from category: Category = .general) async throws -> [Article] {
+    func fetch(from category: Category) async throws -> [Article] {
         try await fetchArticles(from: generateNewsURL(from: category))
     }
     
