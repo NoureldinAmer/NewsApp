@@ -27,7 +27,19 @@ struct ArticleListView: View {
             .listStyle(.plain)
             .navigationTitle("News")
             .task {
-                try? await articlesList.fetch(category: .general)
+                if articlesList.articles.isEmpty {
+                    try? await articlesList.fetch(category: .general)
+                }
+            }
+            .refreshable {
+                do {
+                    try await articlesList.fetch(category: .general)
+                }
+                catch {
+                    return
+                }
+                
+                    
             }
         }
     }
