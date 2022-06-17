@@ -31,6 +31,7 @@ struct ArticleView: View {
         Text(article.title)
             .font(.title2)
             .padding(.trailing, 2.9)
+            .lineLimit(3)
 
     }
     
