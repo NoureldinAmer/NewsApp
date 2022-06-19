@@ -11,7 +11,7 @@ enum Category: String, CaseIterable, Identifiable {
     
     var text: String {
         if self == .general {
-            return "Top Headlines"
+            return "Latest"
         }
         return rawValue.capitalized
     }

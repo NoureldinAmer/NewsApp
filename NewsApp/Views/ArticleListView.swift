@@ -1,46 +1,52 @@
 //
-//  ContentView.swift
+//  ArticleListView.swift
 //  NewsApp
 //
-//  Created by Noureldin Amer on 2022-05-22.
+//  Created by Noureldin Amer on 2022-06-18.
 //
 
 import SwiftUI
 
 struct ArticleListView: View {
-    @ObservedObject var articlesList: ArticleListViewModel
+    @StateObject var articles = ArticleListViewModel()
+    @State var newsCategory : Category = .general
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(articlesList.articles) {article in
-                    NavigationLink{
-                        ArticleWebView(url: article.articleURL)
-                    }label: {
-                        ArticleView(article: article)
-                            .listRowInsets(.init(top: 0, leading: 0,bottom: 0, trailing: 0))
+            VStack {
+                newsCategories.padding(.vertical, 2.0)
+                List {
+                    ForEach(articles.articles) {article in
+                        NavigationLink{
+                            ArticleWebView(url: article.articleURL)
+                        }label: {
+                            ArticleView(article: article)
+                                .listRowInsets(.init(top: 0, leading: 0,bottom: 0, trailing: 0))
+                        }
+                    }
+                    .onDelete(perform: delete)
+                    
+                }
+                .listStyle(.plain)
+                .navigationTitle("Trending News")
+                .task {
+                    if articles.articles.isEmpty {
+                        try? await articles.fetch(category: newsCategory)
                     }
                 }
-                .onDelete(perform: delete)
-                
-            }
-            .listStyle(.plain)
-            .navigationTitle("News")
-            .task {
-                if articlesList.articles.isEmpty {
-                    try? await articlesList.fetch(category: .general)
-                }
-            }
-            .refreshable {
-                do {
-                    try await articlesList.fetch(category: .general)
-                }
-                catch {
-                    return
-                }
-                
+                .refreshable {
+                    do {
+                        try await articles.fetch(category: newsCategory)
+                    }
+                    catch {
+                        return
+                    }
                     
+                    
+                }
+                
             }
+            
         }
     }
     
@@ -48,14 +54,39 @@ struct ArticleListView: View {
     func delete(at offsets: IndexSet) {
         print("hi")
     }
+    
+    var newsCategories : some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(Category.allCases, id: \.self) { genre in
+                    Button {
+                        newsCategory = genre
+                        print(newsCategory.text)
+                        print(newsCategory.rawValue)
+                        Task {
+                            try? await articles.fetch(category: newsCategory)
+                        }
+                    } label: {
+                        Text(genre.text)
+                    }
+                    .buttonStyle(.bordered)
+                    .padding(.leading, 5)
+                    .onTapGesture {
+                        
+                    }
+                }
+            }
+        }
+    }
 }
 
 
-struct ContentView_Previews: PreviewProvider {
+struct ArticleListView_Previews: PreviewProvider {
     static var previews: some View {
-        ArticleListView(articlesList: ArticleListViewModel())
-        
-//        ArticleListView(articles: Article.previewData)
-//            .preferredColorScheme(.light)
+        ArticleListView()
+            .preferredColorScheme(.dark)
+        ArticleListView()
+            .preferredColorScheme(.light)
+            
     }
 }
