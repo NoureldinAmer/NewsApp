@@ -17,9 +17,9 @@ struct ArticleView: View {
             HStack {
                 articleImage
                 VStack(alignment: .leading) {
+                    articleDate
                     articleHeader
-                    Spacer()
-                    articleSource
+                    
                 }
             }
             Spacer()
@@ -45,10 +45,17 @@ struct ArticleView: View {
         }
         .frame(width: 100, height: 100)
         .clipped()
+        .cornerRadius(5)
     }
     
     var articleSource: some View {
         Text(article.source.name)
+            .font(.footnote)
+            .foregroundColor(.secondary)
+    }
+    
+    var articleDate: some View {
+        Text(article.captionText)
             .font(.footnote)
             .foregroundColor(.secondary)
     }
@@ -73,8 +80,6 @@ struct ArticleView_Previews: PreviewProvider {
             
         }
         .listStyle(.plain)
-        
-        
         }
     }
 }

@@ -28,6 +28,7 @@ struct ArticleListView: View {
                     
                 }
                 .listStyle(.plain)
+                .listRowSeparator(.hidden)
                 .navigationTitle("Trending News")
                 .task {
                     if articles.articles.isEmpty {
@@ -55,25 +56,39 @@ struct ArticleListView: View {
         print("hi")
     }
     
+    
+    @State var selectedTab: Category = .general
+    @Namespace var tabAnimation
+    
     var newsCategories : some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(Category.allCases, id: \.self) { genre in
+                ForEach(Category.allCases, id: \.self) { tab in
                     Button {
-                        newsCategory = genre
-                        print(newsCategory.text)
-                        print(newsCategory.rawValue)
+                        guard tab != newsCategory else {return}
+                        newsCategory = tab
                         Task {
                             try? await articles.fetch(category: newsCategory)
                         }
-                    } label: {
-                        Text(genre.text)
-                    }
-                    .buttonStyle(.bordered)
-                    .padding(.leading, 5)
-                    .onTapGesture {
                         
+                        withAnimation (Animation.interactiveSpring()) {
+                            selectedTab = tab
+                        }
+                    } label: {
+                        ZStack {
+                            Text(tab.text)
+                                .font(.title3)
+                                .fontWeight(.heavy)
+                                .foregroundColor(.secondary)
+                                .bold()
+                                .padding(8)
+                                .background(
+                                    tab == selectedTab ? .pink.opacity(0.5) : .clear
+                                )
+                                .cornerRadius(8)
+                        }
                     }
+                    .padding(.horizontal, 5.0)
                 }
             }
         }
