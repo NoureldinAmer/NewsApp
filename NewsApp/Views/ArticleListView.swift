@@ -19,13 +19,14 @@ struct ArticleListView: View {
                     ForEach(articles.articles) {article in
                         NavigationLink{
                             ArticleWebView(url: article.articleURL)
+                                .edgesIgnoringSafeArea(.all)
                         }label: {
                             ArticleView(article: article)
                                 .listRowInsets(.init(top: 0, leading: 0,bottom: 0, trailing: 0))
+                                .edgesIgnoringSafeArea(.bottom)
                         }
                     }
                     .onDelete(perform: delete)
-                    
                 }
                 .listStyle(.plain)
                 .listRowSeparator(.hidden)
@@ -42,12 +43,8 @@ struct ArticleListView: View {
                     catch {
                         return
                     }
-                    
-                    
                 }
-                
             }
-            
         }
     }
     

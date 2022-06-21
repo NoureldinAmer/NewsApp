@@ -19,7 +19,7 @@ class ArticleListViewModel : ObservableObject {
     // MARK: - Intent(s)
     func fetch(category: Category) async throws -> Void {
         Task {
-            self.articles = try! await newsAPI.fetch(from: category)
+            articles = try! await newsAPI.fetch(from: category)
         }
     }
 }

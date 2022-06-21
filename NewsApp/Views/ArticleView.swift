@@ -19,7 +19,6 @@ struct ArticleView: View {
                 VStack(alignment: .leading) {
                     articleDate
                     articleHeader
-                    
                 }
             }
             Spacer()
