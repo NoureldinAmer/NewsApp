@@ -29,7 +29,6 @@ struct ArticleListView: View {
                     .onDelete(perform: delete)
                 }
                 .listStyle(.plain)
-                .listRowSeparator(.hidden)
                 .navigationTitle("Trending News")
                 .task {
                     if articles.articles.isEmpty {
@@ -44,6 +43,24 @@ struct ArticleListView: View {
                         return
                     }
                 }
+                .navigationBarItems(
+                    leading: Button(action: {
+                        // Actions
+                    }, label: {
+                        Image(systemName: "magnifyingglass")
+                            .imageScale(.large)
+                            .foregroundColor(.secondary)
+                    }),
+
+                    trailing: Button(action: {
+                    // Actions
+                    }, label: {
+                        Image(systemName: "bookmark")
+                            .imageScale(.large)
+                            .foregroundColor(.secondary)
+                            .padding()
+                    })
+                )
             }
         }
     }
