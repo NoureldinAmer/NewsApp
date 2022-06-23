@@ -14,6 +14,7 @@ enum DataFetchPhase<T> {
     case failure(Error)
 }
 
+@MainActor
 class ArticleListViewModel : ObservableObject {
     @Published var articles : [Article]
     
@@ -25,8 +26,10 @@ class ArticleListViewModel : ObservableObject {
     
     // MARK: - Intent(s)
     func fetch(category: Category) async throws -> Void {
+        var articlesTemp = [Article]()
         Task {
-            articles = try! await newsAPI.fetch(from: category)
+            articlesTemp = try! await newsAPI.fetch(from: category)
         }
+        articles = articlesTemp
     }
 }
