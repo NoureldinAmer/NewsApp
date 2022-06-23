@@ -10,6 +10,16 @@ import SwiftUI
 struct ArticleListView: View {
     @StateObject var articles = ArticleListViewModel()
     @State var newsCategory : Category = .general
+    @State var saveIconPressed = false {
+        didSet {
+            print(saveIconPressed)
+        }
+    }
+    @State var searchIconPressed = false {
+        didSet {
+            print(searchIconPressed)
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -43,24 +53,35 @@ struct ArticleListView: View {
                         return
                     }
                 }
-                .navigationBarItems(
-                    leading: Button(action: {
-                        // Actions
-                    }, label: {
-                        Image(systemName: "magnifyingglass")
+                .toolbar{
+                    ToolbarItemGroup(placement: .navigationBarTrailing){
+                        Label("saved articles", systemImage: "bookmark")
+                            .foregroundColor(saveIconPressed ? .pink : .secondary)
                             .imageScale(.large)
-                            .foregroundColor(.secondary)
-                    }),
-
-                    trailing: Button(action: {
-                    // Actions
-                    }, label: {
-                        Image(systemName: "bookmark")
+                            .onTapGesture {
+                                withAnimation(.easeOut(duration: 0.15)) {
+                                    saveIconPressed = true
+                                }
+                            }
+                            .sheet(isPresented: $saveIconPressed) {
+                                Text("test")
+                            }
+                    }
+                    
+                    ToolbarItemGroup(placement: .navigationBarLeading){
+                        Label("search articles", systemImage: "magnifyingglass")
+                            .foregroundColor(searchIconPressed ? .pink : .secondary)
                             .imageScale(.large)
-                            .foregroundColor(.secondary)
-                            .padding()
-                    })
-                )
+                            .onTapGesture {
+                                withAnimation(.easeOut(duration: 0.15)){
+                                    searchIconPressed = true
+                                }
+                            }
+                            .sheet(isPresented: $searchIconPressed) {
+                                SearchTabView()
+                            }
+                    }
+                }
             }
         }
     }
