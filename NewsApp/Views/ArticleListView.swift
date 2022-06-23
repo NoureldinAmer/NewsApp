@@ -36,7 +36,6 @@ struct ArticleListView: View {
                                 .edgesIgnoringSafeArea(.bottom)
                         }
                     }
-                    .onDelete(perform: delete)
                 }
                 .listStyle(.plain)
                 .navigationTitle("Trending News")
@@ -64,7 +63,7 @@ struct ArticleListView: View {
                                 }
                             }
                             .sheet(isPresented: $saveIconPressed) {
-                                Text("test")
+                                BookmarkTabView()
                             }
                     }
                     
@@ -132,9 +131,13 @@ struct ArticleListView: View {
 
 
 struct ArticleListView_Previews: PreviewProvider {
+    
+    @StateObject static var articleBookmarkVM = ArticleBookmarkViewModel.shared
+    
     static var previews: some View {
         ArticleListView()
             .preferredColorScheme(.dark)
+            .environmentObject(articleBookmarkVM)
         ArticleListView()
             .preferredColorScheme(.light)
             

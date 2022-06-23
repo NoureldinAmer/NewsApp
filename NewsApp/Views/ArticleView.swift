@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct ArticleView: View {
+    @EnvironmentObject var articleBookmarkVM: ArticleBookmarkViewModel
+    @State var bookmarkIconTapped = false
+    
     let article: Article
     
     var body: some View {
@@ -17,7 +20,24 @@ struct ArticleView: View {
             HStack {
                 articleImage
                 VStack(alignment: .leading) {
-                    articleDate
+                    HStack {
+                        articleDate
+                        Spacer()
+                         Image(systemName: "bookmark")
+                            .foregroundColor(bookmarkIconTapped ? .pink : .secondary)
+                            .onTapGesture {
+                                withAnimation {
+                                    bookmarkIconTapped.toggle()
+                                }
+                                if bookmarkIconTapped {
+                                    articleBookmarkVM.addBookmark(for: article)
+                                } else {
+                                    articleBookmarkVM.removeBookmark(for: article)
+                                }
+                                
+                            }
+                    }
+                    
                     articleHeader
                 }
             }
@@ -66,7 +86,12 @@ struct ArticleView: View {
 
 
 struct ArticleView_Previews: PreviewProvider {
+    @StateObject static var articleBookmarkVM = ArticleBookmarkViewModel.shared
+    
+  
+    
     static var previews: some View {
+        
         NavigationView {
         List {
             NavigationLink {
@@ -80,6 +105,7 @@ struct ArticleView_Previews: PreviewProvider {
         }
         .listStyle(.plain)
         }
+        .environmentObject(articleBookmarkVM)
     }
 }
 
